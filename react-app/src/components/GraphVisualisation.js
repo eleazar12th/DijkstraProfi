@@ -2,6 +2,28 @@ import React from "react";
 import Graph from "react-graph-vis";
 
 export default function GraphVisualisation(props) {
+    const nodesNumber = props.graphState.currDist.length - 1;
+    let nodes = [];
+    for (let i = 1; i <= nodesNumber; ++i) {
+        let nodeDist = props.graphState.currDist[i];
+        if (nodeDist > 1000) {
+            nodeDist = "inf";
+        }
+        nodes.push(
+            { id: i, label: i + ": " + nodeDist, title: "node " + i }
+        );
+    }
+
+    const edgesNumber = props.graphState.edgeColors.length;
+    let edges = [];
+    for (let i = 1; i <= nodesNumber; ++i) {
+        for (let edge of props.edges) {
+            edges.push(
+                { from: i, to: edge.to, label: edge.length, color: props.graphState.edgeColors[edge.id] }
+            );
+        }
+    }
+
     const graph = {
         nodes: [
             { id: 1, label: "1: 0", title: "node 1" },
