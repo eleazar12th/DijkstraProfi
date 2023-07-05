@@ -1,57 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Graph from "react-graph-vis";
 
 export default function GraphVisualisation(props) {
-    const nodesNumber = props.graphState.currDist.length - 1;
-    let nodes = [];
-    for (let i = 1; i <= nodesNumber; ++i) {
-        let nodeDist = props.graphState.currDist[i];
-        if (nodeDist > 1000) {
-            nodeDist = "inf";
+    const [graph, setGraph] = useState({});
+
+    function createGraphNodesEdges(graphState, edgesMap) {
+        const nodesNumber = graphState.currDist.length - 1;
+        let nodes = [];
+        for (let v = 1; v <= nodesNumber; ++v) {
+            let nodeDist = graphState.currDist[v];
+            if (nodeDist > 1000) {
+                nodeDist = "inf";
+            }
+            let newNode = { id: v, label: v + ": " + nodeDist, title: "node " + v, color: graphState.nodeColors[v] };
+            nodes.push(newNode);
         }
-        nodes.push(
-            { id: i, label: i + ": " + nodeDist, title: "node " + i }
-        );
+
+        let edges = [];
+        for (let v = 1; v <= nodesNumber; ++v) {
+            for (let edge of edgesMap[v]) {
+                let newEdge = { from: v, to: edge.to, label: edge.length, color: graphState.edgeColors[edge.id] };
+                edges.push(newEdge);
+            }
+        }
+
+        return {
+            nodes: nodes,
+            edges: edges
+        };
     }
 
-    const edgesNumber = props.graphState.edgeColors.length;
-    let edges = [];
-    for (let i = 1; i <= nodesNumber; ++i) {
-        for (let edge of props.edges) {
-            edges.push(
-                { from: i, to: edge.to, label: edge.length, color: props.graphState.edgeColors[edge.id] }
-            );
-        }
-    }
+    console.log(graph);
 
-    const graph = {
-        nodes: [
-            { id: 1, label: "1: 0", title: "node 1" },
-            { id: 2, label: "2: inf", title: "node 2" },
-            { id: 3, label: "3: inf", title: "node 3" },
-            { id: 4, label: "4: inf", title: "node 4" },
-            { id: 5, label: "5: inf", title: "node 5" },
-            { id: 6, label: "6: inf", title: "node 6" }
-        ],
-        edges: [
-            { from: 1, to: 2, label: "7", color: "red", width: 2, length: 150 },
-            { from: 1, to: 3, label: "9" },
-            { from: 1, to: 6, label: "14" },
-            { from: 2, to: 3, label: "10" },
-            { from: 2, to: 4, label: "15" },
-            { from: 3, to: 4, label: "11" },
-            { from: 3, to: 6, label: "2" },
-            { from: 4, to: 5, label: "6" },
-            { from: 5, to: 6, label: "9" }
-        ]
-    };
+    useEffect(() => {
+        console.log(props.graphState.edgeColors);
+        const newGraph = createGraphNodesEdges(props.graphState, props.edgesMap);
+        setGraph(newGraph);
+    }, [props.graphState, props.edgesMap]);
 
     const options = {
         layout: {
             hierarchical: false
-        },
-        nodes: {
-            color: props.nodesColor
         },
         edges: {
             color: "#000000"
@@ -69,7 +58,8 @@ export default function GraphVisualisation(props) {
         physics: true
     };
 
-    return (<div>
+    /*return (<div>
         <Graph graph={graph} options={options} />
-    </div>);
+    </div>);*/
+    return (<div></div>);
 }

@@ -42,7 +42,7 @@ const GREEN = "lightgreen";
 const RED = "red";
 const VIOLET = "blue";
 
-class State {
+export class State {
     constructor(currDist, nodeColors, edgeColors) {
         this.currDist = currDist;
         this.nodeColors = nodeColors;
@@ -50,10 +50,15 @@ class State {
     }
 }
 
+function findEdgesAmount(n, edges) {
+    for (let i = 1; i <= n; ++i)
+}
+
 export function Dijkstra(n=defaultN, edges=defaultEdges, start=defaultStart) {
     let states = [];
     let dist = Array(n + 1).fill(INF);
     let nodeColors = Array(n + 1).fill(WHITE);
+    console.log("length", edges);
     let edgeColors = Array(edges.length).fill(BLACK);
 
     function pushState() {

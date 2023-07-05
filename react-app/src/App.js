@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "Math";
 import GraphVisualisation from "./components/GraphVisualisation";
-import { Edge, Dijkstra } from "./vanilla-js/dijkstra";
+import { Edge, State, Dijkstra } from "./vanilla-js/dijkstra";
 
 const edges = {
     1: [
@@ -35,13 +34,17 @@ export default function App(props) {
 
     useEffect(() => {
         setGraphStates(Dijkstra(n, edges, start));
+    }, []);
+
+    function buttonOnClick() {
         const interval = setInterval(() => {
             setIndex(Math.min(Index + 1, graphStates.length));
         }, props.time * 1000);
         return () => clearInterval(interval);
-    }, [Index, graphStates, props.time]);
+    }
 
     return (<div>
-        <GraphVisualisation edges={edges} graphState={graphStates[Index]} />
+        <button onSubmit={buttonOnClick}>Start</button>
+        {graphStates.length > 0 && <GraphVisualisation edgesMap={edges} graphState={graphStates[Index]} />}
     </div>);
 }
